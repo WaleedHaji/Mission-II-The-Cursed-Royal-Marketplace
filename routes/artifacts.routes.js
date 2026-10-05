@@ -19,7 +19,7 @@ router.get('/new', (req, res) => {
 router.post('/', async (req, res) => {
   try {
     await Artifact.create(req.body)
-    res.redirect('artifacts/index.ejs')
+    res.redirect('artifacts')
   } catch (error) {
     console.log(error)
     res.redirect('/artifacts/new')
@@ -28,8 +28,8 @@ router.post('/', async (req, res) => {
 
 router.get('/:artifactId', async (req, res) => {
   try {
-    const artifact = await Artifact.findById(req.params.id).populate('reviews')
-    res.render('artifacts/show.html', { artifact })
+    const foundArtifact = await Artifact.findById(req.params.artifactId).populate('reviews')
+    res.render('artifacts/show.ejs', { artifact: foundArtifact })
   } catch (error) {
     console.log(error)
     res.redirect('/artifacts')
@@ -48,7 +48,7 @@ router.get('/:artifactId/edit', async (req, res) => {
 
 router.put('/:artifactId', async (req, res) => {
   try {
-    await Artifact.findByIdAndDelete(req.params.artifactId, req.body)
+    await Artifact.findByIdAndUpdate(req.params.artifactId, req.body)
     res.redirect(`/artifacts/${req.params.artifactId}`)
   } catch (error) {
     console.log(error)
